@@ -1,5 +1,15 @@
 #include <stdio.h> 
 
-int test = 0;
-float test2 = 0;
-char test3 = 0;
+int main() {
+  int r = 10;
+  float t = 24.5;
+
+  if (r + 2 < t) {
+    return 1;
+  }else {
+    return 3;
+  }
+
+  return 0;
+}
+

@@ -35,7 +35,7 @@ int main(int argc, char **argv) {
   bool skip = false;
   while (skip || get_next_token()) {
     skip = false;
-    // display_token(curr_token);
+    display_token(curr_token);
     if (curr_token.type == TOK_INT || curr_token.type == TOK_CHAR || curr_token.type == TOK_FLOAT) {
       skip = true;
       enum TokenType type = curr_token.type;
@@ -53,10 +53,11 @@ int main(int argc, char **argv) {
     if (curr_token.type == TOK_EOF) {
       break ;
     }
-    // fprintf(ofile, "\n");
+    fprintf(ofile, "\n");
     clear();
   }
 
+  fprintf(ofile, "\n");
   display_table();
 
   return 0;
