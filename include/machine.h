@@ -147,4 +147,67 @@ bool state_percentage() {
   return check_single_op(TOK_MOD);
 }
 
+bool state_aps() {
+  c = getc(file); // consume the & 
+  if (c == '&') return check_single_op(TOK_AND);
+  return false;
+}
+
+bool state_pipe() {
+  c = getc(file); // consume the & 
+  if (c == '|') return check_single_op(TOK_OR);
+  return false;
+}
+
+bool state_ex() {
+  c = getc(file); // consume the !
+  enum TokenType type = TOK_NOT;
+  if (c == '=') {
+    type = TOK_NE;
+    c = getc(file); // consume the =
+  }
+  if (isalnum(c) || strchr(" \n\t", c)) {
+    curr_token.type = type;
+    return true;
+  }return false;
+}
+
+bool state_gr() {
+  c = getc(file); // consume the >
+  enum TokenType type = TOK_GT;
+  if (c == '=') {
+    type = TOK_GE;
+    c = getc(file); // consume the =
+  }
+  if (isalnum(c) || strchr(" \n\t", c)) {
+    curr_token.type = type;
+    return true;
+  }return false;
+}
+
+bool state_ls() {
+  c = getc(file); // consume the <
+  enum TokenType type = TOK_LT;
+  if (c == '=') {
+    type = TOK_LE;
+    c = getc(file); // consume the =
+  }
+  if (isalnum(c) || strchr(" \n\t", c)) {
+    curr_token.type = type;
+    return true;
+  }return false;
+}
+
+bool state_eq() {
+  c = getc(file); // consume the =
+  enum TokenType type = TOK_ASS;
+  if (c == '=') {
+    type = TOK_EQ;
+    c = getc(file); // consume the =
+  }
+  if (isalnum(c) || strchr(" \n\t", c)) {
+    curr_token.type = type;
+    return true;
+  }return false;
+}
 

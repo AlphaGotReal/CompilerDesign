@@ -54,7 +54,7 @@ enum TokenType {
   TOK_NOT = 6,
 
   TOK_ASS = -13,
-  TOK_E = -14,
+  TOK_EQ = -14,
   TOK_NE = -15,
   TOK_GE = -16,
   TOK_LE = -17,
@@ -157,6 +157,20 @@ bool get_next_token() {
       c = getc(file);
       curr_token.type = TOK_SCOLON;
       return true;
+
+    /* relational and logical operators */
+    case '&':
+      return state_aps();
+    case '|':
+      return state_pipe();
+    case '!':
+      return state_ex();
+    case '>':
+      return state_gr();
+    case '<':
+      return state_ls();
+    case '=':
+      return state_eq();
 
     default:
       if (isalpha(c)) return continue_state("", TOK_IDENTIFIER);
