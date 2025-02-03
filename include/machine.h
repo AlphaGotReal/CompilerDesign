@@ -1,5 +1,6 @@
 #include <stdbool.h>
 #include <string.h>
+#include <ctype.h>
 
 extern char c;
 extern FILE *file;
@@ -39,9 +40,19 @@ bool state_obrace(); // open brace
 bool state_cbrace();
 bool state_comma();
 bool state_scolcon(); // semi colcon
-                 
+
+bool state_digit() {
+  while (isdigit(c) || c == '.') {
+    curr_token.identifier_value[curr_token.ptr++] = c;
+    c = getc(file);
+  }
+  curr_token.type = TOK_NUMBER;
+  curr_token.numerical_value = atof(curr_token.identifier_value);
+  return true;
+}
+
 bool continue_state(char *string, enum TokenType type) {
-  while (!strchr(" \n\t", c)) {
+  while (!strchr(" \n\t", c) && isalnum(c)) {
     curr_token.identifier_value[curr_token.ptr++] = c;
     c = getc(file);
   } 
@@ -49,7 +60,16 @@ bool continue_state(char *string, enum TokenType type) {
     curr_token.type = type;
     return true;
   }
-  return false;
+  curr_token.type = TOK_IDENTIFIER;
+  return true;
+}
+
+bool check_single_op(enum TokenType type) {
+  c = getc(file);  
+  if (isalnum(c) || strchr(" \n\t", c)) {
+    curr_token.type = type;
+    return true;
+  }return false;
 }
 
 /* source */
@@ -62,7 +82,7 @@ bool state_i() {
     case 'n':
       return continue_state("int", TOK_INT);
     default:
-      return false;
+      return continue_state("", TOK_IDENTIFIER);
   }
 }
 
@@ -84,7 +104,7 @@ bool state_c() {
     case 'o':
       return continue_state("continue", TOK_CONTINUE);
     default:
-      return false;
+      return continue_state("", TOK_IDENTIFIER);
   }
 }
 
@@ -98,6 +118,33 @@ bool state_r() {
 
 bool state_f() {
   return continue_state("float", TOK_FLOAT);
+}
+
+bool state_plus() {
+  return check_single_op(TOK_ADD);
+}
+
+bool state_minus() {
+  return check_single_op(TOK_SUB);
+}
+
+bool state_astrek() {
+  return check_single_op(TOK_MUL);
+}
+
+bool state_slash() {
+  c = getc(file); 
+  if (c == '/') {
+    curr_token.type = TOK_IGNORE;
+    return true;
+  }if (isalnum(c) || strchr(" \n\t", c)) {
+    curr_token.type = TOK_DIV;
+    return true;
+  }return false;
+}
+
+bool state_percentage() {
+  return check_single_op(TOK_MOD);
 }
 
 

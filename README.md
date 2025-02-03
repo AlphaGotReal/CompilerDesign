@@ -3,7 +3,6 @@
 ## Lexical Analysis
 
 ### Identify different types of tokens 
-
 There are a lot of tokens used in c, but I'll stick to these 
 
 1) Identifiers 
@@ -59,4 +58,19 @@ There are a lot of tokens used in c, but I'll stick to these
 
 -> (input state) ---first character--> (first character state) ---lambda transition--> (character specific state machine)
 
+# Usage 
+
+## Build 
+```bash
+git clone https://github.com/AlphaGotReal/CompilerDesign.git
+cd CompilerDesign 
+mkdir build 
+cmake ..
+make 
+```
+
+## Run
+```bash 
+build/compiler sample.c
+```
 

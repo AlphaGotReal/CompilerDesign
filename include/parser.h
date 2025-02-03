@@ -21,6 +21,9 @@ bool clear();
 /* source */
 enum TokenType {
 
+  /* comments and stuff */
+  TOK_IGNORE = 0, 
+
   /* end of file token */
   TOK_EOF = -1,
 
@@ -62,11 +65,11 @@ enum TokenType {
   TOK_OP = -20, // open para (
   TOK_CP = -21,
   TOK_OB = -22, // open braket [
-  TOK_CB = -24,
-  TOK_OBR = -25, // open brace { 
-  TOK_CBR = -26,
-  TOK_COMMA = -27,
-  TOK_SCOLON = -28
+  TOK_CB = -23,
+  TOK_OBR = -24, // open brace { 
+  TOK_CBR = -25,
+  TOK_COMMA = -26,
+  TOK_SCOLON = -27
 
 };
 
@@ -95,7 +98,7 @@ bool get_next_token() {
       curr_token.type = TOK_EOF;
       return true;
     
-    /* identifiers */
+    /* keywords */
     case 'i':
       return state_i();
     case 'e':
@@ -123,19 +126,41 @@ bool get_next_token() {
     case '%':
       return state_percentage();
     case '(':
-      return state_opara();
+      c = getc(file);
+      curr_token.type = TOK_OP;
+      return true;
     case ')':
-      return state_cpara();
+      c = getc(file);
+      curr_token.type = TOK_CP;
+      return true;
     case '[':
-      return state_obra();
+      c = getc(file);
+      curr_token.type = TOK_OB;
+      return true;
     case ']':
-      return state_cbra();
+      c = getc(file);
+      curr_token.type = TOK_CB;
+      return true;
     case '{':
-      return state_obrace();
+      c = getc(file);
+      curr_token.type = TOK_OBR;
+      return true;
     case '}':
-      return state_cbrace();
+      c = getc(file);
+      curr_token.type = TOK_CBR;
+      return true;
+    case ',':
+      c = getc(file);
+      curr_token.type = TOK_COMMA;
+      return true;
+    case ';':
+      c = getc(file);
+      curr_token.type = TOK_SCOLON;
+      return true;
 
     default:
+      if (isalpha(c)) return continue_state("", TOK_IDENTIFIER);
+      if (isdigit(c)) return state_digit();
       return false;
   }
 }

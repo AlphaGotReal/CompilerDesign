@@ -1,13 +1,9 @@
 #include <stdio.h> 
 
-if 
-else
-int
-while
-
-char 
-continue
-break
-return 
-float
+int main() {
+  if (1) {
+    return 1;
+  }
+  return 0;
+}
 
