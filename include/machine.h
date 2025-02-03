@@ -10,7 +10,6 @@ extern struct Token curr_token;
  * of as recusrive calls of one function into another */
 /* false return is a sign of entering error state */
 
-
 /* single character states */
 bool state_i();
 bool state_e();
@@ -41,34 +40,65 @@ bool state_cbrace();
 bool state_comma();
 bool state_scolcon(); // semi colcon
                  
-/* word specific states */
-bool state_if();
-bool state_int();
-bool state_else();
-bool state_while();
-bool state_continue();
-bool state_char();
-bool state_break();
-bool state_return();
-bool state_float();
+bool continue_state(char *string, enum TokenType type) {
+  while (!strchr(" \n\t", c)) {
+    curr_token.identifier_value[curr_token.ptr++] = c;
+    c = getc(file);
+  } 
+  printf("\n%s\n", curr_token.identifier_value);
+  if (strcmp(curr_token.identifier_value, string) == 0) {
+    curr_token.type = type;
+    return true;
+  }
+  return false;
+}
 
-bool state_add();
-bool state_min();
-bool state_mul();
-bool state_div();
-bool state_mod();
+/* source */
+bool state_i() {
+  curr_token.identifier_value[curr_token.ptr++] = 'i';
+  c = getc(file); // consume i 
+  switch (c) {
+    case 'f':
+      return continue_state("if", TOK_IF);
+    case 'n':
+      return continue_state("int", TOK_INT);
+    default:
+      return false;
+  }
+}
 
-bool state_and();
-bool state_and();
-bool state_or();
-bool state_not();
-bool state_neq();
+bool state_e() {
+  return continue_state("else", TOK_ELSE);
+}
 
-bool state_gt();
-bool state_ge();
-bool state_lt();
-bool state_le();
-bool state_assign();
-bool state_equals();
+bool state_w() {
+  return continue_state("while", TOK_WHILE);
+}
+
+
+bool state_c() {
+  curr_token.identifier_value[curr_token.ptr++] = 'c';
+  c = getc(file); // consume c 
+  switch (c) {
+    case 'h':
+      return continue_state("char", TOK_CHAR);
+    case 'o':
+      return continue_state("continue", TOK_CONTINUE);
+    default:
+      return false;
+  }
+}
+
+bool state_b() {
+  return continue_state("break", TOK_BREAK);
+}
+
+bool state_r() {
+  return continue_state("return", TOK_RETURN);
+}
+
+bool state_f() {
+  return continue_state("float", TOK_FLOAT);
+}
 
 

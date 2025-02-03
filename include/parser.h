@@ -4,8 +4,6 @@
 
 #define IDSIZE 100
 
-#include "machine.h"
-
 extern char c;
 extern FILE *file;
 
@@ -76,15 +74,49 @@ struct Token {
   enum TokenType type;
   char *identifier_value;
   double numerical_value;
+  size_t ptr;
 }; 
 
-bool get_next_token() {
+#include "machine.h"
 
+bool get_next_token() {
+  
+  // clear the white spaces
+  while (strchr(" \n\t", c)) c = getc(file);
+
+  // remove the headers 
+  if (c == '#') {
+    while (c != '\n') c = getc(file); // consume the entire line
+    return get_next_token();
+  }
+
+  switch (c) {
+    case EOF:
+      curr_token.type = TOK_EOF;
+      return true;
+    case 'i':
+      return state_i();
+    case 'e':
+      return state_e();
+    case 'w':
+      return state_w();
+    case 'c':
+      return state_c();
+    case 'b':
+      return state_b();
+    case 'r':
+      return state_r();
+    case 'f':
+      return state_f();
+    default:
+      return false;
+  }
 }
 
 bool clear() {
   curr_token.type = 0;
-  curr_token.identifier_value = (char *) malloc(sizeof(char) * IDSIZE);
+  memset(curr_token.identifier_value, '\0', sizeof(char) * IDSIZE);
   curr_token.numerical_value = 0;
+  curr_token.ptr = 0;
 }
 
