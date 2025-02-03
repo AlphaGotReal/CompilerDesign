@@ -4,7 +4,7 @@
 
 ### Identify different types of tokens 
 
-There are a lot of tokens used in c, but I'll will stick to these 
+There are a lot of tokens used in c, but I'll stick to these 
 
 1) Identifiers 
     - identifiers

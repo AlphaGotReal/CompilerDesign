@@ -8,7 +8,7 @@ extern struct Token curr_token;
 /* each state is a function here */
 /* transition from one state to another can be thought 
  * of as recusrive calls of one function into another */
-/* false return is a sign of entering error state */
+/* false is a sign of entering error state */
 
 /* single character states */
 bool state_i();
@@ -45,7 +45,6 @@ bool continue_state(char *string, enum TokenType type) {
     curr_token.identifier_value[curr_token.ptr++] = c;
     c = getc(file);
   } 
-  printf("\n%s\n", curr_token.identifier_value);
   if (strcmp(curr_token.identifier_value, string) == 0) {
     curr_token.type = type;
     return true;

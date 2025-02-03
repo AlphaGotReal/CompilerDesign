@@ -94,6 +94,8 @@ bool get_next_token() {
     case EOF:
       curr_token.type = TOK_EOF;
       return true;
+    
+    /* identifiers */
     case 'i':
       return state_i();
     case 'e':
@@ -108,6 +110,31 @@ bool get_next_token() {
       return state_r();
     case 'f':
       return state_f();
+
+    /* single characters */ 
+    case '+':
+      return state_plus();
+    case '-':
+      return state_minus();
+    case '*':
+      return state_astrek();
+    case '/':
+      return state_slash();
+    case '%':
+      return state_percentage();
+    case '(':
+      return state_opara();
+    case ')':
+      return state_cpara();
+    case '[':
+      return state_obra();
+    case ']':
+      return state_cbra();
+    case '{':
+      return state_obrace();
+    case '}':
+      return state_cbrace();
+
     default:
       return false;
   }
